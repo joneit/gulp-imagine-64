@@ -1,6 +1,6 @@
 {
   "name": "gulp-imagine-64",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Gulp plugin converts globs of image files to array of plain objects with base64 strings.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
