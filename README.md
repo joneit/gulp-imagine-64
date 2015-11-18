@@ -2,13 +2,14 @@
 Gulp plugin converts globs of image files to array of plain objects with base64 strings.
 
 ## Usage
+
 ```javascript
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var header = require('gulp-header');
 var footer = require('gulp-footer');
 
-var img64 = require('./gulp-imagine-64');
+var img64 = require('./');
 var img = require('./config').img64;
 
 gulp.task('images', function() {
@@ -22,6 +23,8 @@ gulp.task('images', function() {
         .pipe(gulp.dest(img.dest.dir));
 });
 ```
+
+_The above sample gulpfile.js can be found in the module folder (node_modules/gulp-imagine-64)._
 
 ## Output
 See [`build/images.js`](https://github.com/joneit/gulp-imagine-64/blob/master/build/images.js) for some sample output.
@@ -53,6 +56,8 @@ module.exports = {
     }
 };
 ```
+
+_The above sample config.js can be found in the module folder (node_modules/gulp-imagine-64)._
 
 ##### Required configuration data
 The only _required_ fields are `glob` (input files) and `path`/`filename` (output file).
