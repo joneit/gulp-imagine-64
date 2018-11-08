@@ -92,15 +92,7 @@ If not given, the default template is:
     },`
 ```
 
-As of v2, the default template uses the new `{mimetype}` variable, which maps the extension (case-insensitive) to the correct [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#Image_types) through the following table:
-
-`{ext}` | `{mimetype}`
-:---: | :---:
-`gif` | `image/gif`
-`jpg`<br>`jpeg` | `image/jpeg`
-`png` | `image/png`
-`svg` | `image/svg+xml`
-`ico` | `image/x-icon`
+As of v2, the default template uses the new `{mimetype}` variable, which maps the extension (case-insensitive) to the correct [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#Image_types) through the [`img64.mimetypeDictionary`](#img65mimetypedictionary) hash. If not found, the value `images/{ext}` (but forced to lower case) is used. The hash can however be augmented or replaced before invoking the function.
 
 **This is a potentially breaking change from v1 which used `image/{ext}`.** If your application monkey-patched the MIME type, you will need to either retire that patch or pass the [v1 template](https://github.com/joneit/gulp-imagine-64/blob/1.0.1/README.md#img64transformoptionstemplate) in the `img64.transform.options.template` option.
 
@@ -124,6 +116,21 @@ _Optional._ String to append to the entire output file.
 
 ### `img64.dest.options`
 _Optional._ Passed to `gulp.dest()` as its [`options`](https://github.com/gulpjs/gulp/blob/master/docs/API.md#options-1) parameter.
+
+### `img64.mimetypes`
+A hash of exceptional MIME types. MIME types that are a faithful reflection of the lower cased extension do not need to be included.
+
+The default hash has the following keys and values:
+
+Key<br>(lower cased `{ext}`) | Value<br>(`{mimetype}`)
+:---: | :---:
+`jpg` | `image/jpeg`
+`svg` | `image/svg+xml`
+`ico` | `image/x-icon`
+
+The hash is dereferenced by the lower cased file extension.
+
+It may be augmented or replaced in the gulpfile before invoking the function.
 
 ## Converting image data to DOM objects
 See [`build/imagine.js`](https://github.com/joneit/gulp-imagine-64/blob/master/build/imagine.js) for an example module that consumes the data on the client side, producing a hash of usable `Image` DOM objects. (This mutates the original hash which isn't needed anymore. You could of course change this to preserve the original hash.)
