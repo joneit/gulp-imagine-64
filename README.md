@@ -8,8 +8,8 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');
 var header = require('gulp-header');
 var footer = require('gulp-footer');
+var img64 = require('gulp-imagine-64');
 
-var img64 = require('./');
 var img = require('./config').img64;
 
 gulp.task('images', function() {
@@ -36,7 +36,7 @@ The `img` object in the above usage example may be configured as follows:
 module.exports = {
     img64: {
         src: {
-            globs: 'images/*',
+            globs: 'images/*.{gif,png,jpg,jpeg,svg,ico}',
             options: {}
         },
         transform: {
@@ -68,28 +68,41 @@ The `header`, `footer`, and `options` fields are all optional. You can give `''`
 ### `img64.src.globs`
 _Required._ Passed to `gulp.src()` as its [`globs`](https://github.com/gulpjs/gulp/blob/master/docs/API.md#globs) parameter.
 
-### `img64.src.options` 
+### `img64.src.options`
 _Optional._ Passed to `gulp.src()` as its [`options`](https://github.com/gulpjs/gulp/blob/master/docs/API.md#options) parameter. Although there's only one output file, note that `options.base` will affect the resulting image keys in that file just as it would normally affect the output files' pathnames. That is, the resulting keys will include the path relative to `base` (using slash as delimiter).
 
 ### `img64.transform.options.template`
-_Optional._ You can provide an arbitrary template in `img64.dest.options.template` with variables. For each file in the `img64.src.files` glob, the template will substitute data for the following variables:
+_Optional._ You can provide an arbitrary template in `img64.transform.options.template` with variables. For each file in the `img64.src.files` glob, the template will substitute data for the following variables:
 
 variable|substitution data
 :---:|--------
-{name} | the filename part of the current file (sans extension)
-{key} | the relative path of the current file, relative to `base` (sans extension)
-{ext} | the extension part of the current file (sans leading period)
-{data} | the image file's data as a base64 string
+`{name}` | the filename part of the current file (sans extension)
+`{key}` | the relative path of the current file, relative to `base` (sans extension)
+`{ext}` | the extension part of the current file (sans leading period)
+`{mimetype}` | the extension mapped through the mime type table (see below)
+`{data}` | the image file's data as a base64 string
 
 Note that `{name}` and `{key}` are the same unless the files are in subfolders _and_ `img64.src.options.base` is given.
 
 If not given, the default template is:
 ```javascript
     "{key}": {
-        type: "image/{ext}",
+        type: "{mimetype}",
         data: "{data}"
     },`
 ```
+
+As of v2, the default template uses the new `{mimetype}` variable, which maps the extension (case-insensitive) to the correct [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#Image_types) through the following table:
+
+`{ext}` | `{mimetype}`
+:---: | :---:
+`gif` | `image/gif`
+`jpg`<br>`jpeg` | `image/jpeg`
+`png` | `image/png`
+`svg` | `image/svg+xml`
+`ico` | `image/x-icon`
+
+**This is a potentially breaking change from v1 which used `image/{ext}`.** If your application monkey-patched the MIME type, you will need to either retire that patch or pass the [v1 template](https://github.com/joneit/gulp-imagine-64/blob/1.0.1/README.md#img64transformoptionstemplate) in the `img64.transform.options.template` option.
 
 ### `img64.transform.header`
 _Optional._ String to prepend to the result of each transform.
@@ -114,3 +127,6 @@ _Optional._ Passed to `gulp.dest()` as its [`options`](https://github.com/gulpjs
 
 ## Converting image data to DOM objects
 See [`build/imagine.js`](https://github.com/joneit/gulp-imagine-64/blob/master/build/imagine.js) for an example module that consumes the data on the client side, producing a hash of usable `Image` DOM objects. (This mutates the original hash which isn't needed anymore. You could of course change this to preserve the original hash.)
+
+## Version History
+See [releases](https://github.com/joneit/gulp-imagine-64/releases).

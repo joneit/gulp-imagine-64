@@ -3,7 +3,7 @@ var concat = require('gulp-concat');
 var header = require('gulp-header');
 var footer = require('gulp-footer');
 
-var img64 = require('./');
+var img64 = require('.');
 var img = require('./config').img64;
 
 gulp.task('images', function() {

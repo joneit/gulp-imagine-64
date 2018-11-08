@@ -1,7 +1,7 @@
 module.exports = {
     img64: {
         src: {
-            globs: 'images/*',
+            globs: 'images/*.{gif,png,jpg,jpeg,svg,ico}',
             options: {}
         },
         transform: {
